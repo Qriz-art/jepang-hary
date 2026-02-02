@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Hiragana - Audio Player</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #fdf0d5; padding: 20px; }
+        h1 { color: #660708; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .char-card {
+            border: 2px solid #ba181b;
+            padding: 15px 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #fff;
+        }
+        .char-card:hover { background: #ba181b; color: white; transform: scale(1.05); }
+        .jp { font-size: 2rem; display: block; font-weight: bold; }
+        .ro { font-size: 0.9rem; color: #666; }
+        .char-card:hover .ro { color: #eee; }
+        .empty { visibility: hidden; }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Papan Suara Hiragana</h1>
+    <p>Klik pada huruf untuk mendengar suaranya!</p>
+
+    <div class="grid-container" id="hiragana-board">
+        </div>
+
+    <script>
+        const hiraganaList = [
+            {jp: 'あ', ro: 'a'}, {jp: 'い', ro: 'i'}, {jp: 'う', ro: 'u'}, {jp: 'え', ro: 'e'}, {jp: 'お', ro: 'o'},
+            {jp: 'か', ro: 'ka'}, {jp: 'き', ro: 'ki'}, {jp: 'く', ro: 'ku'}, {jp: 'け', ro: 'ke'}, {jp: 'こ', ro: 'ko'},
+            {jp: 'さ', ro: 'sa'}, {jp: 'し', ro: 'shi'}, {jp: 'す', ro: 'su'}, {jp: 'せ', ro: 'se'}, {jp: 'そ', ro: 'so'},
+            {jp: 'た', ro: 'ta'}, {jp: 'ち', ro: 'chi'}, {jp: 'つ', ro: 'tsu'}, {jp: 'て', ro: 'te'}, {jp: 'と', ro: 'to'},
+            {jp: 'な', ro: 'na'}, {jp: 'に', ro: 'ni'}, {jp: 'ぬ', ro: 'nu'}, {jp: 'ね', ro: 'ne'}, {jp: 'の', ro: 'no'},
+            {jp: 'は', ro: 'ha'}, {jp: 'ひ', ro: 'hi'}, {jp: 'ふ', ro: 'fu'}, {jp: 'へ', ro: 'he'}, {jp: 'ほ', ro: 'ho'},
+            {jp: 'ま', ro: 'ma'}, {jp: 'み', ro: 'mi'}, {jp: 'む', ro: 'mu'}, {jp: 'め', ro: 'me'}, {jp: 'も', ro: 'mo'},
+            {jp: 'や', ro: 'ya'}, {jp: '', ro: ''}, {jp: 'ゆ', ro: 'yu'}, {jp: '', ro: ''}, {jp: 'よ', ro: 'yo'},
+            {jp: 'ら', ro: 'ra'}, {jp: 'り', ro: 'ri'}, {jp: 'る', ro: 'ru'}, {jp: 'れ', ro: 're'}, {jp: 'ろ', ro: 'ro'},
+            {jp: 'わ', ro: 'wa'}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: 'を', ro: 'wo'},
+            {jp: 'ん', ro: 'n'}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}
+        ];
+
+        const board = document.getElementById('hiragana-board');
+
+        hiraganaList.forEach(item => {
+            const card = document.createElement('div');
+            if (item.jp === '') {
+                card.className = 'empty';
+            } else {
+                card.className = 'char-card';
+                card.innerHTML = `<span class="jp">${item.jp}</span><span class="ro">${item.ro}</span>`;
+                card.onclick = () => playAudio(item.jp);
+            }
+            board.appendChild(card);
+        });
+
+        function playAudio(text) {
+            const utternance = new SpeechSynthesisUtterance(text);
+            utternance.lang = 'ja-JP'; // Set bahasa ke Jepang
+            utternance.rate = 0.8;      // Kecepatan sedikit diperlambat agar jelas
+            window.speechSynthesis.speak(utternance);
+        }
+    </script>
+    <style>
+        .back-link { 
+    text-align: left; 
+    max-width: 500px; 
+    margin: 0 auto 20px; 
+}
+.back-link a { 
+    text-decoration: none; 
+    color: #e63946; /* Warna merah senada Hiragana */
+    font-weight: bold; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.back-link a:hover {
+    text-decoration: underline;
+}
+    </style>
+</body>
+</html>
