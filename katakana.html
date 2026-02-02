@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Katakana - Audio Player</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #e9f5ff; padding: 20px; }
+        h1 { color: #0077b6; }
+        .back-link { text-align: left; max-width: 500px; margin: 0 auto 20px; }
+        .back-link a { text-decoration: none; color: #0077b6; font-weight: bold; }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .char-card {
+            border: 2px solid #00b4d8;
+            padding: 15px 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fff;
+        }
+        .char-card:hover { background: #0077b6; color: white; transform: translateY(-3px); }
+        .jp { font-size: 2rem; display: block; font-weight: bold; }
+        .ro { font-size: 0.9rem; color: #888; }
+        .char-card:hover .ro { color: #ade8f4; }
+        .empty { visibility: hidden; }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Papan Suara Katakana</h1>
+    <p>Klik karakter untuk mendengar pelafalan Katakana</p>
+
+    <div class="grid-container" id="katakana-board">
+        </div>
+
+    <script>
+        const katakanaList = [
+            {jp: 'ア', ro: 'a'}, {jp: 'イ', ro: 'i'}, {jp: 'ウ', ro: 'u'}, {jp: 'エ', ro: 'e'}, {jp: 'オ', ro: 'o'},
+            {jp: 'カ', ro: 'ka'}, {jp: 'キ', ro: 'ki'}, {jp: 'ク', ro: 'ku'}, {jp: 'ケ', ro: 'ke'}, {jp: 'コ', ro: 'ko'},
+            {jp: 'サ', ro: 'sa'}, {jp: 'シ', ro: 'shi'}, {jp: 'ス', ro: 'su'}, {jp: 'セ', ro: 'se'}, {jp: 'ソ', ro: 'so'},
+            {jp: 'タ', ro: 'ta'}, {jp: 'チ', ro: 'chi'}, {jp: 'ツ', ro: 'tsu'}, {jp: 'テ', ro: 'te'}, {jp: 'ト', ro: 'to'},
+            {jp: 'ナ', ro: 'na'}, {jp: 'ニ', ro: 'ni'}, {jp: 'ヌ', ro: 'nu'}, {jp: 'ネ', ro: 'ne'}, {jp: 'ノ', ro: 'no'},
+            {jp: 'ハ', ro: 'ha'}, {jp: 'ヒ', ro: 'hi'}, {jp: 'フ', ro: 'fu'}, {jp: 'ヘ', ro: 'he'}, {jp: 'ホ', ro: 'ho'},
+            {jp: 'マ', ro: 'ma'}, {jp: 'ミ', ro: 'mi'}, {jp: 'ム', ro: 'mu'}, {jp: 'メ', ro: 'me'}, {jp: 'モ', ro: 'mo'},
+            {jp: 'ヤ', ro: 'ya'}, {jp: '', ro: ''}, {jp: 'ユ', ro: 'yu'}, {jp: '', ro: ''}, {jp: 'ヨ', ro: 'yo'},
+            {jp: 'ラ', ro: 'ra'}, {jp: 'リ', ro: 'ri'}, {jp: 'ル', ro: 'ru'}, {jp: 'レ', ro: 're'}, {jp: 'ロ', ro: 'ro'},
+            {jp: 'ワ', ro: 'wa'}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: 'ヲ', ro: 'wo'},
+            {jp: 'ン', ro: 'n'}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}, {jp: '', ro: ''}
+        ];
+
+        const board = document.getElementById('katakana-board');
+
+        katakanaList.forEach(item => {
+            const card = document.createElement('div');
+            if (item.jp === '') {
+                card.className = 'empty';
+            } else {
+                card.className = 'char-card';
+                card.innerHTML = `<span class="jp">${item.jp}</span><span class="ro">${item.ro}</span>`;
+                card.onclick = () => playAudio(item.jp);
+            }
+            board.appendChild(card);
+        });
+
+        function playAudio(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

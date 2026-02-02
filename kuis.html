@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tantangan 20 Kanji</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #edf2f4; text-align: center; padding: 20px; }
+        .quiz-container { background: white; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        #kanji-display { font-size: 6rem; color: #d90429; margin-bottom: 20px; font-weight: bold; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn { padding: 15px; font-size: 1.1rem; background: #f8f9fa; border: 2px solid #8d99ae; border-radius: 10px; cursor: pointer; }
+        .correct { background: #2a9d8f !important; color: white; }
+        .wrong { background: #e63946 !important; color: white; }
+        
+        /* Progress Bar */
+        .progress-container { width: 100%; background: #ddd; border-radius: 10px; margin-bottom: 20px; }
+        .progress-bar { width: 0%; height: 20px; background: #2a9d8f; border-radius: 10px; transition: 0.5s; }
+        
+        #final-screen { display: none; }
+        .btn-restart { background: #2b2d42; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-box">
+        <h2 id="title">Tantangan 20 Kanji</h2>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        <p>Progres: <span id="count">0</span> / 20</p>
+
+        <div id="game-content">
+            <div id="kanji-display">?</div>
+            <div id="feedback" style="height: 30px; font-weight: bold; margin-bottom: 10px;"></div>
+            <div class="options-grid" id="options"></div>
+            <button onclick="nextQuestion()" id="next-btn" style="display:none; margin-top: 20px; padding: 10px 20px; cursor:pointer;">Lanjut →</button>
+        </div>
+
+        <div id="final-screen">
+            <h1 style="color: #2a9d8f;">🎉 Omedetou!</h1>
+            <p>Anda telah menyelesaikan tantangan 20 Kanji dengan sukses.</p>
+            <button class="btn-restart" onclick="location.reload()">Main Lagi</button>
+            <br><br>
+            <a href="index.html" style="text-decoration:none; color:#8d99ae;">Kembali ke Menu Utama</a>
+        </div>
+    </div>
+
+    <script>
+        // Gunakan daftar lengkap kanji Anda di sini
+        let originalKanji = [
+            { kanji: "日", arti: "Matahari / Hari" }, { kanji: "月", arti: "Bulan" },
+            { kanji: "火", arti: "Api" }, { kanji: "水", arti: "Air" },
+            { kanji: "木", arti: "Pohon" }, { kanji: "金", arti: "Emas / Uang" },
+            { kanji: "土", arti: "Tanah" }, { kanji: "山", arti: "Gunung" },
+            { kanji: "川", arti: "Sungai" }, { kanji: "人", arti: "Orang" },
+            { kanji: "一", arti: "Satu" }, { kanji: "二", arti: "Dua" },
+            { kanji: "三", arti: "Tiga" }, { kanji: "大", arti: "Besar" },
+            { kanji: "小", arti: "Kecil" }, { kanji: "今", arti: "Sekarang" },
+            { kanji: "友", arti: "Teman" }, { kanji: "女", arti: "Wanita" },
+            { kanji: "男", arti: "Pria" }, { kanji: "何", arti: "Apa" },
+            { kanji: "時", arti: "Jam" }, { kanji: "分", arti: "Menit" },
+            { kanji: "年", arti: "Tahun" }, { kanji: "名", arti: "Nama" }
+        ];
+
+        let quizPool = [...originalKanji]; // Salinan untuk diacak/hapus
+        let correctCount = 0;
+        let currentCorrect = {};
+
+        function nextQuestion() {
+            if (correctCount >= 20) {
+                showFinalScreen();
+                return;
+            }
+
+            document.getElementById('feedback').innerText = "";
+            document.getElementById('next-btn').style.display = "none";
+            
+            // Pilih soal acak dari pool
+            let randomIndex = Math.floor(Math.random() * quizPool.length);
+            currentCorrect = quizPool[randomIndex];
+            
+            document.getElementById('kanji-display').innerText = currentCorrect.kanji;
+
+            // Buat pilihan (1 benar, 3 salah dari database asli)
+            let options = [currentCorrect.arti];
+            while (options.length < 4) {
+                let randomArti = originalKanji[Math.floor(Math.random() * originalKanji.length)].arti;
+                if (!options.includes(randomArti)) {
+                    options.push(randomArti);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(btn, opt, randomIndex);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selected, indexInPool) {
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (selected === currentCorrect.arti) {
+        btn.classList.add('correct');
+        document.getElementById('feedback').innerText = "BENAR! 🌟";
+        document.getElementById('feedback').style.color = "#2a9d8f";
+        
+        // FITUR AUDIO: Membacakan Kanji jika benar
+        playKanjiAudio(currentCorrect.kanji);
+        
+        quizPool.splice(indexInPool, 1);
+        correctCount++;
+        updateProgress();
+    } else {
+        btn.classList.add('wrong');
+        document.getElementById('feedback').innerText = "SALAH! Jawaban: " + currentCorrect.arti;
+        document.getElementById('feedback').style.color = "#e63946";
+    }
+
+    document.getElementById('next-btn').style.display = "inline-block";
+}
+
+// Fungsi pembantu untuk mengeluarkan suara
+function playKanjiAudio(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP'; // Bahasa Jepang
+    utterance.rate = 0.8;      // Kecepatan natural
+    window.speechSynthesis.speak(utterance);
+}
+
+        function updateProgress() {
+            let percent = (correctCount / 20) * 100;
+            document.getElementById('progress').style.width = percent + "%";
+            document.getElementById('count').innerText = correctCount;
+        }
+
+        function showFinalScreen() {
+            document.getElementById('game-content').style.display = "none";
+            document.getElementById('title').style.display = "none";
+            document.getElementById('final-screen').style.display = "block";
+        }
+
+        nextQuestion();
+    </script>
+</body>
+</html>

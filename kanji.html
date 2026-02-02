@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Kanji Dasar - N5</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fff1f0; text-align: center; padding: 20px; }
+        .back-link { text-align: left; max-width: 800px; margin: 0 auto 20px; }
+        .back-link a { text-decoration: none; color: #d90429; font-weight: bold; }
+        
+        h1 { color: #2b2d42; }
+        
+        .kanji-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .kanji-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #d90429;
+            transition: transform 0.2s;
+        }
+
+        .kanji-card:hover { transform: translateY(-5px); }
+
+        .big-kanji { font-size: 4rem; color: #d90429; margin: 10px 0; }
+        .meaning { font-size: 1.2rem; font-weight: bold; color: #2b2d42; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .readings { text-align: left; margin-top: 15px; font-size: 0.9rem; }
+        .reading-label { font-weight: bold; color: #8d99ae; display: inline-block; width: 80px; }
+        .onyomi { color: #ef233c; } /* Biasanya ditulis Katakana */
+        .kunyomi { color: #0077b6; } /* Biasanya ditulis Hiragana */
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Dasar-Dasar Kanji (N5)</h1>
+    <p>Simbol yang membawa makna. Pelajari cara baca dan artinya.</p>
+
+    <div class="kanji-container" id="kanji-list">
+        </div>
+
+    <script>
+        const dataKanji = [
+            { kanji: "日", arti: "Matahari / Hari", on: "NICHI, JITSU", kun: "hi, -bi" },
+            { kanji: "月", arti: "Bulan", on: "GETSU, GATSU", kun: "tsuki" },
+            { kanji: "火", arti: "Api", on: "KA", kun: "hi, -bi" },
+            { kanji: "水", arti: "Air", on: "SUI", kun: "mizu" },
+            { kanji: "木", arti: "Pohon", on: "MOKU, BOKU", kun: "ki" },
+            { kanji: "金", arti: "Emas / Uang", on: "KIN, KON", kun: "kane" },
+            { kanji: "土", arti: "Tanah", on: "DO, TO", kun: "tsuchi" },
+            { kanji: "山", arti: "Gunung", on: "SAN", kun: "yama" },
+            { kanji: "川", arti: "Sungai", on: "SEN", kun: "kawa" },
+            { kanji: "人", arti: "Orang", on: "JIN, NIN", kun: "hito" },
+            { kanji: "一", arti: "Satu", on: "ICHI", kun: "hito(tsu)" },
+    { kanji: "二", arti: "Dua", on: "NI", kun: "futa(tsu)" },
+    { kanji: "三", arti: "Tiga", on: "SAN", kun: "mit(tsu)" },
+    { kanji: "上", arti: "Atas", on: "JOU", kun: "ue, a(garu)" },
+    { kanji: "下", arti: "Bawah", on: "KA, GE", kun: "shita, sa(garu)" },
+    { kanji: "中", arti: "Tengah / Dalam", on: "CHUU", kun: "naka" },
+    { kanji: "大", arti: "Besar", on: "DAI, TAI", kun: "oo(kii)" },
+    { kanji: "小", arti: "Kecil", on: "SHOU", kun: "chi(isai), ko" },
+    { kanji: "本", arti: "Buku / Asal", on: "HON", kun: "moto" },
+    { kanji: "学", arti: "Belajar / Ilmu", on: "GAKU", kun: "mana(bu)" },
+    { kanji: "校", arti: "Sekolah", on: "KOU", kun: "-" },
+    { kanji: "先", arti: "Dahulu / Depan", on: "SEN", kun: "saki" },
+    { kanji: "生", arti: "Hidup / Lahir", on: "SEI, SHOU", kun: "i(kiru), u(mareru)" },
+    { kanji: "何", arti: "Apa", on: "KA", kun: "nani, nan" },
+    { kanji: "名", arti: "Nama", on: "MEI, MYOU", kun: "na" },
+    { kanji: "分", arti: "Menit / Membagi", on: "BUN, FUN", kun: "wa(karu)" },
+    { kanji: "時", arti: "Waktu / Jam", on: "JI", kun: "toki" },
+    { kanji: "年", arti: "Tahun", on: "NEN", kun: "toshi" },
+    { kanji: "午", arti: "Siang", on: "GO", kun: "-" }, // Digunakan di AM (Gozen) & PM (Gogo)
+    { kanji: "前", arti: "Depan / Sebelum", on: "ZEN", kun: "mae" },
+    { kanji: "後", arti: "Belakang / Sesudah", on: "GO, KOU", kun: "ushiro, ato" },
+    { kanji: "今", arti: "Sekarang", on: "KON, KIN", kun: "ima" },
+    { kanji: "北", arti: "Utara", on: "HOKU", kun: "kita" },
+    { kanji: "南", arti: "Selatan", on: "NAN", kun: "minami" },
+    { kanji: "東", arti: "Timur", on: "TOU", kun: "higashi" },
+    { kanji: "西", arti: "Barat", on: "SEI, SAI", kun: "nishi" },
+    { kanji: "女", arti: "Wanita", on: "JO", kun: "onna" },
+    { kanji: "男", arti: "Pria", on: "DAN, NAN", kun: "otoko" },
+    { kanji: "子", arti: "Anak", on: "SHI, SU", kun: "ko" },
+    { kanji: "友", arti: "Teman", on: "YUU", kun: "tomo" }
+        ];
+        
+
+        const container = document.getElementById('kanji-list');
+
+        dataKanji.forEach(item => {
+            container.innerHTML += `
+                <div class="kanji-card">
+                    <div class="big-kanji">${item.kanji}</div>
+                    <div class="meaning">${item.arti}</div>
+                    <div class="readings">
+                        <div><span class="reading-label">Onyomi:</span> <span class="onyomi">${item.on}</span></div>
+                        <div><span class="reading-label">Kunyomi:</span> <span class="kunyomi">${item.kun}</span></div>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
