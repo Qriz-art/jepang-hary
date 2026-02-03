@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kata Kerja Jepang</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; padding: 20px; text-align: center; }
+        .back-link { text-align: left; max-width: 800px; margin: 0 auto 15px; }
+        .back-link a { text-decoration: none; color: #1d3557; font-weight: bold; }
+
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; /* Ini kuncinya agar kolom mengikuti lebar yang kita tentukan */
+        }
+        
+        th, td { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            text-align: left; 
+            word-wrap: break-word; /* Agar tulisan panjang tidak keluar tabel */
+        }
+
+        th { background-color: #1d3557; color: white; }
+
+        /* Mengatur Lebar Kolom */
+        th:nth-child(1), td:nth-child(1) { width: 35%; } /* Kolom Kanji/Kana */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Kolom Romaji */
+        th:nth-child(3), td:nth-child(3) { width: 40%; } /* Kolom Arti */
+        
+        .jp-font { font-size: 1.4rem; font-weight: bold; color: #e63946; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+        
+        .search-box {
+            padding: 12px; width: 100%; max-width: 300px; margin-bottom: 20px;
+            border-radius: 20px; border: 1px solid #ccc; outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Kamus Kata Kerja (N5)</h1>
+    
+    <input type="text" id="verbSearch" class="search-box" placeholder="Cari kata kerja atau arti..." onkeyup="filterVerbs()">
+
+    <div class="container">
+        <table id="verbTable">
+            <thead>
+                <tr>
+                    <th>Kanji / Kana</th>
+                    <th>Romaji</th>
+                    <th>Arti</th>
+                </tr>
+            </thead>
+            <tbody id="verbBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        const verbList = [
+            { kanji: "行く", kana: "いく", ro: "Iku", arti: "Pergi" },
+            { kanji: "来る", kana: "くる", ro: "Kuru", arti: "Datang" },
+            { kanji: "食べる", kana: "たべる", ro: "Taberu", arti: "Makan" },
+            { kanji: "飲む", kana: "のむ", ro: "Nomu", arti: "Minum" },
+            { kanji: "寝る", kana: "ねる", ro: "Neru", arti: "Tidur" },
+            { kanji: "起きる", kana: "おきる", ro: "Okiru", arti: "Bangun" },
+            { kanji: "見る", kana: "みる", ro: "Miru", arti: "Melihat" },
+            { kanji: "聞く", kana: "きく", ro: "Kiku", arti: "Mendengar" },
+            { kanji: "読む", kana: "よむ", ro: "Yomu", arti: "Membaca" },
+            { kanji: "書く", kana: "かく", ro: "Kaku", arti: "Menulis" },
+            { kanji: "買う", kana: "かう", ro: "Kau", arti: "Membeli" },
+            { kanji: "売る", kana: "うる", ro: "Uru", arti: "Menjual" },
+            { kanji: "話す", kana: "はなす", ro: "Hanasu", arti: "Berbicara" },
+            { kanji: "待つ", kana: "まつ", ro: "Matsu", arti: "Menunggu" },
+            { kanji: "呼ぶ", kana: "よぶ", ro: "Yobu", arti: "Memanggil" },
+            { kanji: "座る", kana: "すわる", ro: "Suwaru", arti: "Duduk" },
+            { kanji: "立つ", kana: "たつ", ro: "Tatsu", arti: "Berdiri" },
+            { kanji: "帰る", kana: "かえる", ro: "Kaeru", arti: "Pulang" },
+            { kanji: "遊ぶ", kana: "あそぶ", ro: "Asobu", arti: "Bermain" },
+            { kanji: "勉強する", kana: "べんきょうする", ro: "Benkyou suru", arti: "Belajar" },
+            { kanji: "洗う", kana: "あらう", ro: "Arau", arti: "Mencuci" },
+            { kanji: "歩く", kana: "あるく", ro: "Aruku", arti: "Berjalan" },
+            { kanji: "走る", kana: "はしる", ro: "Hashiru", arti: "Berlari" },
+            { kanji: "泳ぐ", kana: "およぐ", ro: "Oyogu", arti: "Berenang" },
+            { kanji: "貸す", kana: "かす", ro: "Kasu", arti: "Meminjamkan" },
+            { kanji: "借りる", kana: "かりる", ro: "Kariru", arti: "Meminjam" },
+            { kanji: "教える", kana: "おしえる", ro: "Oshieru", arti: "Mengajar" },
+            { kanji: "忘れる", kana: "わすれる", ro: "Wasureru", arti: "Lupa" },
+            { kanji: "覚える", kana: "おぼえる", ro: "Oboeru", arti: "Mengingat" },
+            { kanji: "作る", kana: "つくる", ro: "Tsukuru", arti: "Membuat" },
+            { kanji: "使う", kana: "つかう", ro: "Tsukau", arti: "Menggunakan" },
+            { kanji: "死ぬ", kana: "しぬ", ro: "Shinu", arti: "Mati" },
+            { kanji: "持つ", kana: "まつ", ro: "Motsu", arti: "Membawa/Memiliki" },
+            { kanji: "入る", kana: "はいる", ro: "Hairu", arti: "Masuk" },
+            { kanji: "出る", kana: "でる", ro: "Deru", arti: "Keluar" },
+            { kanji: "乗る", kana: "のる", ro: "Noru", arti: "Naik (Kendaraan)" },
+            { kanji: "降りる", kana: "おりる", ro: "Oriru", arti: "Turun (Kendaraan)" },
+            { kanji: "会う", kana: "あう", ro: "Au", arti: "Bertemu" },
+            { kanji: "笑う", kana: "わらう", ro: "Warau", arti: "Tertawa" },
+            { kanji: "働く", kana: "はたらく", ro: "Hataraku", arti: "Bekerja" },
+            { kanji: "休む", kana: "やすむ", ro: "Yasumu", arti: "Beristirahat" },
+            { kanji: "撮る", kana: "とる", ro: "Toru", arti: "Memotret" },
+            { kanji: "脱ぐ", kana: "ぬぐ", ro: "Nugu", arti: "Melepas (Pakaian)" },
+            { kanji: "履く", kana: "はく", ro: "Haku", arti: "Memakai (Celana/Sepatu)" },
+            { kanji: "切る", kana: "きる", ro: "Kiru", arti: "Memotong" },
+            { kanji: "知る", kana: "しる", ro: "Shiru", arti: "Tahu / Mengetahui" },
+            { kanji: "わかる", kana: "わかる", ro: "Wakaru", arti: "Mengerti / Paham" },
+            { kanji: "住む", kana: "すむ", ro: "Sumu", arti: "Tinggal (Menetap)" },
+            { kanji: "頼む", kana: "たのむ", ro: "Tanomu", arti: "Meminta tolong" },
+            { kanji: "借りる", kana: "かりる", ro: "Kariru", arti: "Meminjam" },
+            { kanji: "返す", kana: "かえす", ro: "Kaesu", arti: "Mengembalikan" },
+            { kanji: "払う", kana: "はらう", ro: "Harau", arti: "Membayar" },
+            { kanji: "送る", kana: "おくる", ro: "Okuru", arti: "Mengirim" },
+            { kanji: "着る", kana: "きる", ro: "Kiru", arti: "Memakai (Baju)" },
+            { kanji: "会う", kana: "あう", ro: "Au", arti: "Bertemu" },
+            { kanji: "登る", kana: "のぼる", ro: "Noboru", arti: "Mendaki (Gunung)" },
+            { kanji: "歌う", kana: "うたう", ro: "Utau", arti: "Bernyanyi" },
+            { kanji: "弾く", kana: "ひく", ro: "Hiku", arti: "Bermain (Alat musik petik/piano)" },
+            { kanji: "引く", kana: "ひく", ro: "Hiku", arti: "Menarik" },
+            { kanji: "押す", kana: "おす", ro: "Osu", arti: "Mendorong / Menekan" },
+            { kanji: "開ける", kana: "あける", ro: "Akeru", arti: "Membuka" },
+            { kanji: "閉める", kana: "しめる", ro: "Shimeru", arti: "Menutup" },
+            { kanji: "消す", kana: "けす", ro: "Kesu", arti: "Mematikan (Lampu) / Menghapus" },
+            { kanji: "点ける", kana: "つける", ro: "Tsukeru", arti: "Menyalakan (Lampu)" },
+            { kanji: "手伝う", kana: "てつだう", ro: "Tetsudau", arti: "Membantu" },
+            { kanji: "浴びる", kana: "あびる", ro: "Abiru", arti: "Mandi" },
+            { kanji: "磨く", kana: "みがく", ro: "Migaku", arti: "Menggosok/Mengasah" },
+            { kanji: "掃除する", kana: "そうじする", ro: "Souji suru", arti: "Membersihkan" },
+            { kanji: "料理する", kana: "りょうりする", ro: "Ryouri suru", arti: "Memasak" },
+            { kanji: "洗濯する", kana: "せんたくする", ro: "Sentaku suru", arti: "Mencuci pakaian" },
+            { kanji: "散歩する", kana: "さんぽする", ro: "Sanpo suru", arti: "Jalan-jalan" },
+            { kanji: "旅行する", kana: "りょこうする", ro: "Ryokou suru", arti: "Berwisata" },
+            { kanji: "練習する", kana: "れんしゅうする", ro: "Renshuu suru", arti: "Berlatih" },
+            { kanji: "準備する", kana: "じゅんびする", ro: "Junbi suru", arti: "Bersiap-siap" },
+            { kanji: "買い物する", kana: "かいものする", ro: "Kaimono suru", arti: "Berbelanja" },
+            { kanji: "食事する", kana: "しょくじする", ro: "Shokuji suru", arti: "Makan (Formal)" },
+            { kanji: "電話する", kana: "でんわする", ro: "Denwa suru", arti: "Menelepon" },
+            { kanji: "結婚する", kana: "けっこんする", ro: "Kekkon suru", arti: "Menikah" },
+            { kanji: "紹介する", kana: "しょうかいする", ro: "Shoukai suru", arti: "Memperkenalkan" },
+            { kanji: "コピーする", kana: "こぴーする", ro: "Kopii suru", arti: "Memfotokopi" },
+            { kanji: "飛ぶ", kana: "とぶ", ro: "Tobu", arti: "Terbang" },
+            { kanji: "跳ねる", kana: "はねる", ro: "Haneru", arti: "Melompat" },
+            { kanji: "曲がる", kana: "まがる", ro: "Magaru", arti: "Belok/Bengkok" },
+            { kanji: "渡る", kana: "わたる", ro: "Wataru", arti: "Menyeberang" },
+            { kanji: "並ぶ", kana: "ならぶ", ro: "Narabu", arti: "Berbaris/Antre" },
+            { kanji: "並べる", kana: "ならべる", ro: "Naraberu", arti: "Menyusun" },
+            { kanji: "止まる", kana: "とまる", ro: "Tomaru", arti: "Berhenti" },
+            { kanji: "吹く", kana: "ふく", ro: "Fuku", arti: "Bertiup/Meniup" },
+            { kanji: "咲く", kana: "さく", ro: "Saku", arti: "Mekar" },
+            { kanji: "降る", kana: "ふる", ro: "Furu", arti: "Turun (Hujan/Salju)" },
+            { kanji: "曇る", kana: "くもる", ro: "Kumoru", arti: "Berawan/Mendung" },
+            { kanji: "晴れる", kana: "はれる", ro: "Hereru", arti: "Cerah" },
+            { kanji: "困る", kana: "こまる", ro: "Komaru", arti: "Kesulitan/Bingung" },
+            { kanji: "怒る", kana: "おこる", ro: "Okoru", arti: "Marah" },
+            { kanji: "泣く", kana: "なく", ro: "Naku", arti: "Menangis" },
+            { kanji: "驚く", kana: "おどろく", ro: "Odoroku", arti: "Terkejut" },
+            { kanji: "急ぐ", kana: "いそぐ", ro: "Isogu", arti: "Terburu-buru" },
+            { kanji: "頑張る", kana: "がんばる", ro: "Ganbaru", arti: "Berusaha keras" },
+            { kanji: "祈る", kana: "いのる", ro: "Inoru", arti: "Berdoa" },
+            { kanji: "直す", kana: "なおす", ro: "Naosu", arti: "Memperbaiki" }
+                        ];
+
+        const tbody = document.getElementById('verbBody');
+
+        function loadVerbs() {
+            verbList.forEach(v => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => playVerb(v.kanji);
+                tr.innerHTML = `
+                    <td>
+                        <span class="jp-font">${v.kanji}</span><br>
+                        <span class="kana-font">${v.kana}</span>
+                    </td>
+                    <td><i>${v.ro}</i></td>
+                    <td><b>${v.arti}</b></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function playVerb(text) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ja-JP';
+            window.speechSynthesis.speak(utter);
+        }
+
+        function filterVerbs() {
+            let input = document.getElementById('verbSearch').value.toLowerCase();
+            let rows = tbody.getElementsByTagName('tr');
+            for (let row of rows) {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+
+        loadVerbs();
+    </script>
+</body>
+</html>
