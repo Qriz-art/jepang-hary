@@ -50,18 +50,23 @@
     <script>
         // Gunakan daftar lengkap kanji Anda di sini
         let originalKanji = [
-            { kanji: "日", arti: "Matahari / Hari" }, { kanji: "月", arti: "Bulan" },
-            { kanji: "火", arti: "Api" }, { kanji: "水", arti: "Air" },
-            { kanji: "木", arti: "Pohon" }, { kanji: "金", arti: "Emas / Uang" },
-            { kanji: "土", arti: "Tanah" }, { kanji: "山", arti: "Gunung" },
-            { kanji: "川", arti: "Sungai" }, { kanji: "人", arti: "Orang" },
-            { kanji: "一", arti: "Satu" }, { kanji: "二", arti: "Dua" },
-            { kanji: "三", arti: "Tiga" }, { kanji: "大", arti: "Besar" },
-            { kanji: "小", arti: "Kecil" }, { kanji: "今", arti: "Sekarang" },
-            { kanji: "友", arti: "Teman" }, { kanji: "女", arti: "Wanita" },
-            { kanji: "男", arti: "Pria" }, { kanji: "何", arti: "Apa" },
-            { kanji: "時", arti: "Jam" }, { kanji: "分", arti: "Menit" },
-            { kanji: "年", arti: "Tahun" }, { kanji: "名", arti: "Nama" }
+             { kanji: "行く", kana: "いく", ro: "Iku", arti: "Pergi" },
+            { kanji: "来る", kana: "くる", ro: "Kuru", arti: "Datang" },
+            { kanji: "食べる", kana: "たべる", ro: "Taberu", arti: "Makan" },
+            { kanji: "飲む", kana: "のむ", ro: "Nomu", arti: "Minum" },
+            { kanji: "寝る", kana: "ねる", ro: "Neru", arti: "Tidur" },
+            { kanji: "起きる", kana: "おきる", ro: "Okiru", arti: "Bangun" },
+            { kanji: "見る", kana: "みる", ro: "Miru", arti: "Melihat" },
+            { kanji: "聞く", kana: "きく", ro: "Kiku", arti: "Mendengar" },
+            { kanji: "読む", kana: "よむ", ro: "Yomu", arti: "Membaca" },
+            { kanji: "書く", kana: "かく", ro: "Kaku", arti: "Menulis" },
+            { kanji: "買う", kana: "かう", ro: "Kau", arti: "Membeli" },
+            { kanji: "売る", kana: "うる", ro: "Uru", arti: "Menjual" },
+            { kanji: "話す", kana: "はなす", ro: "Hanasu", arti: "Berbicara" },
+            { kanji: "待つ", kana: "まつ", ro: "Matsu", arti: "Menunggu" },
+            { kanji: "呼ぶ", kana: "よぶ", ro: "Yobu", arti: "Memanggil" },
+            { kanji: "座る", kana: "すわる", ro: "Suwaru", arti: "Duduk" },
+            { kanji: "立つ", kana: "たつ", ro: "Tatsu", arti: "Berdiri" },
         ];
 
         let quizPool = [...originalKanji]; // Salinan untuk diacak/hapus
