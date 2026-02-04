@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nama Hewan - Doubutsu</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; padding: 20px; text-align: center; }
+        .back-link { text-align: left; max-width: 800px; margin: 0 auto 15px; }
+        .back-link a { text-decoration: none; color: #2d6a4f; font-weight: bold; }
+
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; /* Ini kuncinya agar kolom mengikuti lebar yang kita tentukan */
+        }
+        
+        th, td { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            text-align: left; 
+            word-wrap: break-word; /* Agar tulisan panjang tidak keluar tabel */
+        }
+
+        th { background-color: #1d3557; color: white; }
+
+        /* Mengatur Lebar Kolom */
+        th:nth-child(1), td:nth-child(1) { width: 35%; } /* Kolom Kanji/Kana */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Kolom Romaji */
+        th:nth-child(3), td:nth-child(3) { width: 40%; } /* Kolom Arti */
+        
+        .jp-font { font-size: 1.4rem; font-weight: bold; color: #e63946; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { background-color: #2d6a4f; color: white; padding: 15px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; word-wrap: break-word; }
+        
+        th:nth-child(1), td:nth-child(1) { width: 35%; }
+        th:nth-child(2), td:nth-child(2) { width: 25%; }
+        th:nth-child(3), td:nth-child(3) { width: 40%; }
+
+        .jp-font { font-size: 1.4rem; font-weight: bold; color: #1b4332; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+        
+        tr:hover { background-color: #f0fff4; cursor: pointer; }
+        .search-box { padding: 12px; width: 100%; max-width: 300px; margin-bottom: 20px; border-radius: 20px; border: 1px solid #ccc; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Nama-Nama Hewan (Doubutsu)</h1>
+    
+    <input type="text" id="animalSearch" class="search-box" placeholder="Cari nama hewan..." onkeyup="filterAnimals()">
+
+    <div class="container">
+        <table id="animalTable">
+            <thead>
+                <tr>
+                    <th>Kanji / Kana</th>
+                    <th>Romaji</th>
+                    <th>Arti</th>
+                </tr>
+            </thead>
+            <tbody id="animalBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const animalList = [
+            { kanji: "犬", kana: "いぬ", ro: "Inu", arti: "Anjing" },
+            { kanji: "猫", kana: "ねこ", ro: "Neko", arti: "Kucing" },
+            { kanji: "鳥", kana: "とり", ro: "Tori", arti: "Burung" },
+            { kanji: "鶏", kana: "にわとり", ro: "Niwatori", arti: "Ayam" },
+            { kanji: "魚", kana: "さかな", ro: "Sakana", arti: "Ikan" },
+            { kanji: "兎", kana: "うさぎ", ro: "Usagi", arti: "Kelinci" },
+            { kanji: "馬", kana: "うま", ro: "Uma", arti: "Kuda" },
+            { kanji: "牛", kana: "うし", ro: "Ushi", arti: "Sapi" },
+            { kanji: "豚", kana: "ぶた", ro: "Buta", arti: "Babi" },
+            { kanji: "羊", kana: "ひつじ", ro: "Hitsuji", arti: "Domba" },
+            { kanji: "山羊", kana: "やぎ", ro: "Yagi", arti: "Kambing" },
+            { kanji: "猿", kana: "さる", ro: "Saru", arti: "Monyet" },
+            { kanji: "象", kana: "ぞう", ro: "Zou", arti: "Gajah" },
+            { kanji: "獅子", kana: "ライオン", ro: "Raion", arti: "Singa" },
+            { kanji: "虎", kana: "とら", ro: "Tora", arti: "Harimau" },
+            { kanji: "熊", kana: "くま", ro: "Kuma", arti: "Beruang" },
+            { kanji: "蛇", kana: "へび", ro: "Hebi", arti: "Ular" },
+            { kanji: "鰐", kana: "わに", ro: "Wani", arti: "Buaya" },
+            { kanji: "亀", kana: "かめ", ro: "Kame", arti: "Kura-kura" },
+            { kanji: "蛙", kana: "かえる", ro: "Kaeru", arti: "Katak" },
+            { kanji: "鼠", kana: "ねずみ", ro: "Nezumi", arti: "Tikus" },
+            { kanji: "栗鼠", kana: "りす", ro: "Risu", arti: "Tupai" },
+            { kanji: "麒麟", kana: "きりん", ro: "Kirin", arti: "Jerapah" },
+            { kanji: "縞馬", kana: "しまうま", ro: "Shimauma", arti: "Zebra" },
+            { kanji: "鹿", kana: "しか", ro: "Shika", arti: "Rusa" },
+            { kanji: "河馬", kana: "かば", ro: "Kaba", arti: "Kuda Nil" },
+            { kanji: "犀", kana: "さい", ro: "Sai", arti: "Badak" },
+            { kanji: "駱駝", kana: "らくだ", ro: "Rakuda", arti: "Unta" },
+            { kanji: "狐", kana: "きつね", ro: "Kitsune", arti: "Rubah" },
+            { kanji: "狸", kana: "たぬき", ro: "Tanuki", arti: "Anjing Rakun (Tanuki)" },
+            { kanji: "狼", kana: "おおかみ", ro: "Ookami", arti: "Serigala" },
+            { kanji: "蝙蝠", kana: "こうもり", ro: "Koumori", arti: "Kelelawar" },
+            { kanji: "鯨", kana: "くじら", ro: "Kujira", arti: "Paus" },
+            { kanji: "海豚", kana: "いるか", ro: "Iruka", arti: "Lumba-lumba" },
+            { kanji: "鮫", kana: "さめ", ro: "Same", arti: "Hiu" },
+            { kanji: "蛸", kana: "たこ", ro: "Tako", arti: "Gurita" },
+            { kanji: "烏賊", kana: "いか", ro: "Ika", arti: "Cumi-cumi" },
+            { kanji: "蝦", kana: "えび", ro: "Ebi", arti: "Udang" },
+            { kanji: "蟹", kana: "かに", ro: "Kani", arti: "Kepiting" },
+            { kanji: "貝", kana: "かい", ro: "Kai", arti: "Kerang" },
+            { kanji: "蝶", kana: "ちょう", ro: "Chou", arti: "Kupu-kupu" },
+            { kanji: "蜂", kana: "はち", ro: "Hachi", arti: "Lebah" },
+            { kanji: "蟻", kana: "あり", ro: "Ari", arti: "Semut" },
+            { kanji: "蚊", kana: "か", ro: "Ka", arti: "Nyamuk" },
+            { kanji: "蝿", kana: "はえ", ro: "Hae", arti: "Lalat" },
+            { kanji: "蜘蛛", kana: "くも", ro: "Kumo", arti: "Laba-laba" },
+            { kanji: "蜻蛉", kana: "とんぼ", ro: "Tonbo", arti: "Capung" },
+            { kanji: "蝉", kana: "せみ", ro: "Semi", arti: "Jangkrik/Tonggeret" },
+            { kanji: "鴉", kana: "からす", ro: "Karasu", arti: "Gagak" },
+            { kanji: "鴨", kana: "かも", ro: "Kamo", arti: "Bebek" }
+                ];
+
+        const tbody = document.getElementById('animalBody');
+
+        function loadAnimals() {
+            animalList.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => playAnimal(a.kana);
+                tr.innerHTML = `
+                    <td>
+                        <span class="jp-font">${a.kanji}</span><br>
+                        <span class="kana-font">${a.kana}</span>
+                    </td>
+                    <td><i>${a.ro}</i></td>
+                    <td><b>${a.arti}</b></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function playAnimal(text) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ja-JP';
+            window.speechSynthesis.speak(utter);
+        }
+
+        function filterAnimals() {
+            let input = document.getElementById('animalSearch').value.toLowerCase();
+            let rows = tbody.getElementsByTagName('tr');
+            for (let row of rows) {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+
+        loadAnimals();
+    </script>
+</body>
+</html>
