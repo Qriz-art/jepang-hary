@@ -35,7 +35,9 @@
             <div id="kanji-display">?</div>
             <div id="feedback" style="height: 30px; font-weight: bold; margin-bottom: 10px;"></div>
             <div class="options-grid" id="options"></div>
-            <button onclick="nextQuestion()" id="next-btn" style="display:none; margin-top: 20px; padding: 10px 20px; cursor:pointer;">Lanjut →</button>
+         <button id="next-btn" onclick="nextQuestion()" style="display: none; margin-top: 20px; padding: 10px 30px; background-color: #1320dd; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+    Soal Berikutnya 
+</button>
         </div>
 
         <div id="final-screen">
@@ -50,23 +52,28 @@
     <script>
         // Gunakan daftar lengkap kanji Anda di sini
         let originalKanji = [
-             { kanji: "行く", kana: "いく", ro: "Iku", arti: "Pergi" },
-            { kanji: "来る", kana: "くる", ro: "Kuru", arti: "Datang" },
-            { kanji: "食べる", kana: "たべる", ro: "Taberu", arti: "Makan" },
-            { kanji: "飲む", kana: "のむ", ro: "Nomu", arti: "Minum" },
-            { kanji: "寝る", kana: "ねる", ro: "Neru", arti: "Tidur" },
-            { kanji: "起きる", kana: "おきる", ro: "Okiru", arti: "Bangun" },
-            { kanji: "見る", kana: "みる", ro: "Miru", arti: "Melihat" },
-            { kanji: "聞く", kana: "きく", ro: "Kiku", arti: "Mendengar" },
-            { kanji: "読む", kana: "よむ", ro: "Yomu", arti: "Membaca" },
-            { kanji: "書く", kana: "かく", ro: "Kaku", arti: "Menulis" },
-            { kanji: "買う", kana: "かう", ro: "Kau", arti: "Membeli" },
-            { kanji: "売る", kana: "うる", ro: "Uru", arti: "Menjual" },
-            { kanji: "話す", kana: "はなす", ro: "Hanasu", arti: "Berbicara" },
-            { kanji: "待つ", kana: "まつ", ro: "Matsu", arti: "Menunggu" },
-            { kanji: "呼ぶ", kana: "よぶ", ro: "Yobu", arti: "Memanggil" },
-            { kanji: "座る", kana: "すわる", ro: "Suwaru", arti: "Duduk" },
-            { kanji: "立つ", kana: "たつ", ro: "Tatsu", arti: "Berdiri" },
+           { kanji: "犬", kana: "いぬ", ro: "Inu", arti: "Anjing" },
+            { kanji: "猫", kana: "ねこ", ro: "Neko", arti: "Kucing" },
+            { kanji: "鳥", kana: "とり", ro: "Tori", arti: "Burung" },
+            { kanji: "鶏", kana: "にわとり", ro: "Niwatori", arti: "Ayam" },
+            { kanji: "魚", kana: "さかな", ro: "Sakana", arti: "Ikan" },
+            { kanji: "兎", kana: "うさぎ", ro: "Usagi", arti: "Kelinci" },
+            { kanji: "馬", kana: "うま", ro: "Uma", arti: "Kuda" },
+            { kanji: "牛", kana: "うし", ro: "Ushi", arti: "Sapi" },
+            { kanji: "豚", kana: "ぶた", ro: "Buta", arti: "Babi" },
+            { kanji: "羊", kana: "ひつじ", ro: "Hitsuji", arti: "Domba" },
+            { kanji: "山羊", kana: "やぎ", ro: "Yagi", arti: "Kambing" },
+            { kanji: "猿", kana: "さる", ro: "Saru", arti: "Monyet" },
+            { kanji: "象", kana: "ぞう", ro: "Zou", arti: "Gajah" },
+            { kanji: "獅子", kana: "ライオン", ro: "Raion", arti: "Singa" },
+            { kanji: "虎", kana: "とら", ro: "Tora", arti: "Harimau" },
+            { kanji: "熊", kana: "くま", ro: "Kuma", arti: "Beruang" },
+            { kanji: "蛇", kana: "へび", ro: "Hebi", arti: "Ular" },
+            { kanji: "鰐", kana: "わに", ro: "Wani", arti: "Buaya" },
+            { kanji: "亀", kana: "かめ", ro: "Kame", arti: "Kura-kura" },
+            { kanji: "蛙", kana: "かえる", ro: "Kaeru", arti: "Katak" },
+            { kanji: "鼠", kana: "ねずみ", ro: "Nezumi", arti: "Tikus" },
+            { kanji: "鹿", kana: "しか", ro: "Shika", arti: "Rusa" }
         ];
 
         let quizPool = [...originalKanji]; // Salinan untuk diacak/hapus
