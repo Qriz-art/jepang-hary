@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nama Buah - Kudamono</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; padding: 20px; text-align: center; }
+        .back-link { text-align: left; max-width: 800px; margin: 0 auto 15px; }
+        .back-link a { text-decoration: none; color: #fb8500; font-weight: bold; }
+
+       .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            table-layout: fixed; /* Ini kuncinya agar kolom mengikuti lebar yang kita tentukan */
+        }
+        
+        th, td { 
+            padding: 15px; 
+            border-bottom: 1px solid #eee; 
+            text-align: left; 
+            word-wrap: break-word; /* Agar tulisan panjang tidak keluar tabel */
+        }
+
+        th { background-color: #1d3557; color: white; }
+
+        /* Mengatur Lebar Kolom */
+        th:nth-child(1), td:nth-child(1) { width: 35%; } /* Kolom Kanji/Kana */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Kolom Romaji */
+        th:nth-child(3), td:nth-child(3) { width: 40%; } /* Kolom Arti */
+        
+        .jp-font { font-size: 1.4rem; font-weight: bold; color: #e63946; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th { background-color: #fb8500; color: white; padding: 15px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; word-wrap: break-word; }
+        
+        th:nth-child(1), td:nth-child(1) { width: 35%; }
+        th:nth-child(2), td:nth-child(2) { width: 25%; }
+        th:nth-child(3), td:nth-child(3) { width: 40%; }
+
+        .jp-font { font-size: 1.4rem; font-weight: bold; color: #d00000; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+        
+        tr:hover { background-color: #fff9f1; cursor: pointer; }
+        .search-box { padding: 12px; width: 100%; max-width: 300px; margin-bottom: 20px; border-radius: 20px; border: 1px solid #ccc; outline: none; }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Nama-Nama Buah (Kudamono)</h1>
+    
+    <input type="text" id="fruitSearch" class="search-box" placeholder="Cari nama buah..." onkeyup="filterFruits()">
+
+    <div class="container">
+        <table id="fruitTable">
+            <thead>
+                <tr>
+                    <th>Kanji / Kana</th>
+                    <th>Romaji</th>
+                    <th>Arti</th>
+                </tr>
+            </thead>
+            <tbody id="fruitBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const fruitList = [
+            { kanji: "林檎", kana: "りんご", ro: "Ringo", arti: "Apel" },
+            { kanji: "蜜柑", kana: "みかん", ro: "Mikan", arti: "Jeruk" },
+            { kanji: "葡萄", kana: "ぶどう", ro: "Budou", arti: "Anggur" },
+            { kanji: "西瓜", kana: "すいか", ro: "Suika", arti: "Semangka" },
+            { kanji: "苺", kana: "いちご", ro: "Ichigo", arti: "Stroberi" },
+            { kanji: "桃", kana: "もも", ro: "Momo", arti: "Persik" },
+            { kanji: "梨", kana: "なし", ro: "Nashi", arti: "Pir Jepang" },
+            { kanji: "柿", kana: "かき", ro: "Kaki", arti: "Kesemek" },
+            { kanji: "香蕉", kana: "バナナ", ro: "Banana", arti: "Pisang" },
+            { kanji: "鳳梨", kana: "パイナップル", ro: "Painappuru", arti: "Nanas" },
+            { kanji: "甜瓜", kana: "メロン", ro: "Meron", arti: "Melon" },
+            { kanji: "檸檬", kana: "レモン", ro: "Remon", arti: "Lemon" },
+            { kanji: "芒果", kana: "マンゴー", ro: "Mangoo", arti: "Mangga" },
+            { kanji: "木瓜", kana: "パパイヤ", ro: "Papaiya", arti: "Pepaya" },
+            { kanji: "椰子の実", kana: "やしのみ", ro: "Yashi no mi", arti: "Kelapa" },
+            { kanji: "櫻桃", kana: "さくらんぼ", ro: "Sakuranbo", arti: "Ceri" },
+            { kanji: "無花果", kana: "いちじく", ro: "Ichijiku", arti: "Buah Tin / Ara" },
+            { kanji: "石榴", kana: "ざくろ", ro: "Zakuro", arti: "Delima" },
+            { kanji: "藍苺", kana: "ブルーベリー", ro: "Buruuberii", arti: "Blueberry" },
+            { kanji: "覆盆子", kana: "ラズベリー", ro: "Razuberii", arti: "Raspberry" },
+            { kanji: "酪梨", kana: "アボカド", ro: "Abokado", arti: "Alpukat" },
+            { kanji: "火龍果", kana: "ドラゴンフルーツ", ro: "Doragonfuruutsu", arti: "Buah Naga" },
+            { kanji: "榴蓮", kana: "ドリアン", ro: "Dorian", arti: "Durian" },
+            { kanji: "山竹", kana: "マンゴスチン", ro: "Mangosuchin", arti: "Manggis" },
+            { kanji: "紅毛丹", kana: "ランブータン", ro: "Ranbuutan", arti: "Rambutan" },
+            { kanji: "奇異果", kana: "キウイ", ro: "Kiui", arti: "Kiwi" },
+            { kanji: "百香果", kana: "パッションフルーツ", ro: "Passhonfuruutsu", arti: "Markisa" },
+            { kanji: "番石榴", kana: "グアバ", ro: "Guaba", arti: "Jambu Biji" },
+            { kanji: "連霧", kana: "レンブ", ro: "Renbu", arti: "Jambu Air" },
+            { kanji: "茘枝", kana: "ライチ", ro: "Raichi", arti: "Leci" },
+            { kanji: "龍眼", kana: "りゅうがん", ro: "Ryuugan", arti: "Lengkeng" },
+            { kanji: "楊桃", kana: "スターフルーツ", ro: "Sutaafuruutsu", arti: "Belimbing" },
+    
+
+        ];
+
+        const tbody = document.getElementById('fruitBody');
+
+        function loadFruits() {
+            fruitList.forEach(f => {
+                const tr = document.createElement('tr');
+                tr.onclick = () => playFruit(f.kana);
+                tr.innerHTML = `
+                    <td>
+                        <span class="jp-font">${f.kanji}</span><br>
+                        <span class="kana-font">${f.kana}</span>
+                    </td>
+                    <td><i>${f.ro}</i></td>
+                    <td><b>${f.arti}</b></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function playFruit(text) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ja-JP';
+            window.speechSynthesis.speak(utter);
+        }
+
+        function filterFruits() {
+            let input = document.getElementById('fruitSearch').value.toLowerCase();
+            let rows = tbody.getElementsByTagName('tr');
+            for (let row of rows) {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+
+        loadFruits();
+    </script>
+</body>
+</html>
