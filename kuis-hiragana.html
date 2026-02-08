@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Hewan Hiragana - 20 Soal</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; padding: 20px; text-align: center; }
+        .back-link { text-align: left; max-width: 500px; margin: 0 auto 15px; }
+        .back-link a { text-decoration: none; color: #2d6a4f; font-weight: bold; }
+
+        .quiz-container { 
+            max-width: 500px; margin: 0 auto; background: white; 
+            padding: 25px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+        }
+
+        .status-bar { display: flex; justify-content: space-between; margin-bottom: 15px; color: #666; font-size: 0.9rem; }
+        .hiragana-display { 
+            font-size: 4.5rem; font-weight: bold; color: #2d6a4f; 
+            margin: 20px 0; background: #f0fff4; border-radius: 15px; padding: 20px;
+        }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .option-btn { 
+            padding: 15px; font-size: 1.1rem; border: 2px solid #eee; 
+            border-radius: 12px; cursor: pointer; background: white; transition: 0.2s;
+        }
+        .option-btn:hover { border-color: #2d6a4f; background: #f0fff4; }
+
+        .btn-next { 
+            display: none; width: 100%; margin-top: 20px; padding: 15px; 
+            background: #2d6a4f; color: white; border: none; 
+            border-radius: 12px; font-weight: bold; cursor: pointer;
+        }
+
+        #result-msg { margin-top: 15px; font-weight: bold; min-height: 24px; }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <div class="quiz-container" id="quiz-box">
+        <div class="status-bar">
+            <span>Soal: <b id="question-num">1</b> / 20</span>
+            <span>Skor: <b id="current-score">0</b></span>
+        </div>
+        
+        <div id="target-hiragana" class="hiragana-display">...</div>
+
+        <div class="options-grid" id="options-container"></div>
+
+        <div id="result-msg"></div>
+        <button id="next-btn" class="btn-next" onclick="nextQuestion()">Soal Berikutnya →</button>
+    </div>
+
+    <script>
+        const animalData = [
+            { h: "いぬ", a: "Anjing" }, { h: "ねこ", a: "Kucing" }, { h: "とり", a: "Burung" },
+            { h: "さかな", a: "Ikan" }, { h: "うさぎ", a: "Kelinci" }, { h: "うま", a: "Kuda" },
+            { h: "うし", a: "Sapi" }, { h: "ぶた", a: "Babi" }, { h: "さる", a: "Monyet" },
+            { h: "ぞう", a: "Gajah" }, { h: "へび", a: "Ular" }, { h: "かめ", a: "Kura-kura" },
+            { h: "かえる", a: "Katak" }, { h: "あり", a: "Semut" }, { h: "はち", a: "Lebah" },
+            { h: "くじら", a: "Paus" }, { h: "いるか", a: "Lumba-lumba" }, { h: "たこ", a: "Gurita" },
+            { h: "さめ", a: "Hiu" }, { h: "きつね", a: "Rubah" }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let shuffledData = [];
+
+        function initQuiz() {
+            // Acak dan ambil hanya 20 soal
+            shuffledData = [...animalData].sort(() => Math.random() - 0.5).slice(0, 20);
+            loadQuestion();
+        }
+
+        function playSound(text) {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ja-JP';
+            window.speechSynthesis.speak(utter);
+        }
+
+        function loadQuestion() {
+            const q = shuffledData[currentIdx];
+            document.getElementById('question-num').innerText = currentIdx + 1;
+            document.getElementById('target-hiragana').innerText = q.h;
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('result-msg').innerText = '';
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            let choices = [q];
+            while(choices.length < 4) {
+                let rand = animalData[Math.floor(Math.random() * animalData.length)];
+                if(!choices.find(c => c.a === rand.a)) choices.push(rand);
+            }
+            choices.sort(() => Math.random() - 0.5);
+
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = choice.a;
+                btn.onclick = () => {
+                    playSound(q.h);
+                    checkAnswer(choice.a === q.a, btn);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(isCorrect, btn) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+            if(isCorrect) {
+                btn.style.background = "#d4edda";
+                btn.style.borderColor = "#28a745";
+                document.getElementById('result-msg').innerHTML = "<span style='color: green;'>Benar! ✨</span>";
+                score += 5; // 5 poin x 20 soal = 100
+            } else {
+                btn.style.background = "#f8d7da";
+                btn.style.borderColor = "#dc3545";
+                document.getElementById('result-msg').innerHTML = "<span style='color: red;'>Salah! ❌</span>";
+            }
+            document.getElementById('current-score').innerText = score;
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if(currentIdx < 20) {
+                loadQuestion();
+            } else {
+                // Tampilan Selesai
+                document.getElementById('quiz-box').innerHTML = `
+                    <h2>Kuis Selesai!</h2>
+                    <p style="font-size: 1.2rem;">Skor Akhir Anda:</p>
+                    <h1 style="font-size: 4rem; color: #2d6a4f;">${score}</h1>
+                    <button onclick="location.reload()" style="padding: 15px 30px; background: #2d6a4f; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Ulangi Kuis</button>
+                `;
+            }
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

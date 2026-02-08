@@ -4,69 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nihongo Learn - Belajar Jepang Seru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f4f4f4; }
-        header { background: #e63946; color: white; padding: 1rem; text-align: center; }
-        nav { display: flex; justify-content: center; background: #1d3557; }
-        nav a { color: white; padding: 14px 20px; text-decoration: none; }
-        .container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn { display: inline-block; background: #e63946; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; margin-top: 10px; }
+        :root {
+            --primary: #e63946;
+            --secondary: #1d3557;
+            --accent: #457b9d;
+            --bg: #f8f9fa;
+            --text: #2b2d42;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            background-color: var(--bg); 
+            color: var(--text);
+        }
+
+        header { 
+            background: linear-gradient(135deg, var(--primary), #b91d2c);
+            color: white; 
+            padding: 2.5rem 1rem; 
+            text-align: center; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
+        header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.9rem; }
+
+        nav { 
+            display: flex; 
+            justify-content: center; 
+            background: var(--secondary); 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a { 
+            color: white; 
+            padding: 15px 18px; 
+            text-decoration: none; 
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover { background: var(--accent); }
+
+        .container { 
+            padding: 25px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05); 
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-bottom: 5px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .card h3 { 
+            margin: 0 0 10px 0; 
+            color: var(--secondary); 
+            font-size: 1.3rem;
+            text-transform: capitalize;
+        }
+
+        .card p { 
+            color: #666; 
+            font-size: 0.9rem; 
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn { 
+            display: block; 
+            background: var(--primary); 
+            color: white; 
+            padding: 12px; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: bold;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .btn:hover { background: var(--secondary); }
+
+        /* Warna khusus untuk kuis agar menonjol */
+        .card-quiz { border-color: #ffb703; }
+        .card-quiz .btn { background: #ffb703; color: #1d3557; }
+        .card-quiz .btn:hover { background: #fb8500; color: white; }
+
+        @media (max-width: 600px) {
+            .container { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Ganbatte! Belajar Bahasa Jepang</h1>
+    <h1>Ganbatte! 日本語</h1>
+    <p>Platform Belajar Bahasa Jepang Interaktif</p>
 </header>
 
 <nav>
-    <a href="#">Beranda</a>
+   
     <a href="hirgana.html">Hiragana</a>
     <a href="katakana.html">Katakana</a>
     <a href="kanji.html">Kanji</a>
+ 
 </nav>
 
 <div class="container">
     <div class="card">
         <h3>Hiragana</h3>
-        <p>Langkah pertama menguasai sistem penulisan Jepang.</p>
+        <p>Dasar utama membaca tulisan asli Jepang. Wajib hafal bagi pemula!</p>
         <a href="hirgana.html" class="btn">Mulai Belajar</a>
     </div>
+
     <div class="card">
         <h3>Katakana</h3>
-        <p>Langkah pertama menguasai sistem penulisan Jepang.</p>
+        <p>Digunakan untuk menulis kata serapan asing. Penting untuk nama kamu!</p>
         <a href="katakana.html" class="btn">Mulai Belajar</a>
     </div>
+
     <div class="card">
-        <h3>kanji </h3>
-        <p>Belajar pola kalimat dasar seperti "api" dan "air".</p>
-        <a href="kanji.html" class="btn">Mulai Belajar</a>
+        <h3>Kanji Dasar</h3>
+        <p>Belajar simbol yang penuh makna, mulai dari elemen alam hingga angka.</p>
+        <a href="kanji.html" class="btn">Buka Daftar</a>
     </div>
+
     <div class="card">
-        <h3>kata kerja</h3>
-        <p>Pelajari berbagai kosakata tindakan untuk mulai menyusun kalimat bahasa Jepang .</p>
-        <a href="kerja.html" class="btn">Mulai Belajar</a>
+        <h3>Kata Kerja</h3>
+        <p>Kumpulan 100 kosa kata tindakan untuk mulai menyusun kalimat.</p>
+        <a href="kerja.html" class="btn">Pelajari Kata Kerja</a>
     </div>
-     <div class="card">
-        <h3>nama buah (kudamono)</h3>
-        <p>Kenali nama-nama buah dalam bahasa Jepang lengkap dengan Kanji</p>
-        <a href="buah.html" class="btn">Mulai Belajar</a>
-    </div>
-     <div class="card">
-        <h3>Nama-Nama Hewan (Doubutsu)</h3>
-        <p>Pelajari kosa kata hewan dari peliharaan hingga hewan liar dalam bahasa Jepang.</p>
-        <a href="hewan.html" class="btn">Mulai Belajar</a>
-    </div>
-     <div class="card">
-        <h3>Angka 1 - 100 (Suuji)</h3>
-        <p>Kuasai cara berhitung dari satu sampai seratus dalam bahasa Jepang dengan cepat dan mudah.</p>
-        <a href="buah.html" class="btn">Mulai Belajar</a>
-    </div>
+
     <div class="card">
-        <h3>Quiz Harian</h3>
-        <p>Uji sejauh mana kemampuan mengingat kanji Anda.</p>
-        <a href="kuis.html" class="btn">Ikut Quiz</a>
+        <h3>Nama Buah</h3>
+        <p>Kudamono: Hafalkan nama-nama buah segar dalam bahasa Jepang.</p>
+        <a href="buah.html" class="btn">Lihat Daftar</a>
+    </div>
+
+    <div class="card">
+        <h3>Nama Hewan</h3>
+        <p>Doubutsu: Dari hewan peliharaan sampai hewan buas ada di sini.</p>
+        <a href="hewan.html" class="btn">Jelajahi Hewan</a>
+    </div>
+
+    <div class="card">
+        <h3>Angka 1 - 100</h3>
+        <p>Belajar berhitung satu sampai seratus dengan pelafalan yang benar.</p>
+        <a href="angka.html" class="btn">Belajar Angka</a>
+    </div>
+
+    <div class="card card-quiz">
+        <h3>Quiz Hewan (Hiragana)</h3>
+        <p>Uji kemampuan membaca Hiragana kamu melalui kuis 20 soal hewan.</p>
+        <a href="kuis-hiragana.html" class="btn">Mulai Kuis Sekarang</a>
     </div>
 </div>
 
