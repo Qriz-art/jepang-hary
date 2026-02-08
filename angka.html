@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angka 1 - 100 Jepang</title>
+    <style>
+      body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; padding: 20px; text-align: center; }
+        .back-link { text-align: left; max-width: 800px; margin: 0 auto 15px; }
+        .back-link a { text-decoration: none; color: #6a0dad; font-weight: bold; }
+
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow-x: auto; /* Tambahan agar aman di HP */
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            /* Hapus table-layout: fixed jika kolom ingin fleksibel mengikuti isi */
+        }
+        
+        th, td { 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #eee; 
+            text-align: middle; 
+            vertical-align: middle; 
+        }
+        
+        th { background-color: #6a0dad; color: white; }
+
+        /* Mengunci lebar kolom agar tidak lari */
+        th:nth-child(1), td:nth-child(1) { width: 15%; text-align: center; }
+        th:nth-child(2), td:nth-child(2) { width: 50%; }
+        th:nth-child(3), td:nth-child(3) { width: 35%; }
+
+        .num-font { font-size: 1.2rem; font-weight: bold; color: #6a0dad; }
+        
+        /* Container untuk Kanji & Hiragana agar tetap rapi ke bawah */
+        .jp-wrapper {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .jp-font { font-size: 1.1rem; font-weight: bold; color: #333; }
+        .kana-font { font-size: 0.9rem; color: #666; }
+        
+        tr:hover { background-color: #f3e5f5; cursor: pointer; }
+        
+        .search-box { 
+            padding: 12px; width: 90%; max-width: 300px; margin-bottom: 20px; 
+            border-radius: 20px; border: 1px solid #ccc; outline: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="back-link">
+        <a href="index.html">← Kembali ke Menu</a>
+    </div>
+
+    <h1>Angka 1 - 100 (Suuji)</h1>
+    <p class="header-info">Klik pada baris angka untuk mendengar .</p>
+    
+    <input type="text" id="numSearch" class="search-box" placeholder="Cari angka (contoh: 25)..." onkeyup="filterNumbers()">
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Angka</th>
+                    <th>Kanji & Hiragana</th>
+                    <th>Romaji</th>
+                </tr>
+            </thead>
+            <tbody id="numBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        const kanjiAngka = {
+            0: "零", 1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 
+            6: "六", 7: "七", 8: "八", 9: "九", 10: "十"
+        };
+
+        const bacaAngka = {
+            1: "いち (ichi)", 2: "に (ni)", 3: "さん (san)", 4: "よん (yon)", 5: "ご (go)",
+            6: "ろく (roku)", 7: "なな (nana)", 8: "はち (hachi)", 9: "きゅう (kyuu)", 10: "じゅう (juu)"
+        };
+
+        function getKanji(n) {
+            if (n <= 10) return kanjiAngka[n];
+            if (n < 20) return "十" + kanjiAngka[n % 10];
+            let puluh = Math.floor(n / 10);
+            let satuan = n % 10;
+            return (puluh === 1 ? "" : kanjiAngka[puluh]) + "十" + (satuan === 0 ? "" : kanjiAngka[satuan]);
+        }
+
+        function getHiraganaRomaji(n) {
+            if (n <= 10) return bacaAngka[n];
+            let puluh = Math.floor(n / 10);
+            let satuan = n % 10;
+            
+            let hPuluh = (puluh === 1 ? "" : bacaAngka[puluh].split(" ")[0]) + "じゅう";
+            let rPuluh = (puluh === 1 ? "" : bacaAngka[puluh].split("(")[1].replace(")", "")) + "juu";
+            
+            let hSatuan = satuan === 0 ? "" : bacaAngka[satuan].split(" ")[0];
+            let rSatuan = satuan === 0 ? "" : " " + bacaAngka[satuan].split("(")[1].replace(")", "");
+            
+            if (n === 100) return "ひゃく (hyaku)";
+            return `${hPuluh}${hSatuan} (${rPuluh}${rSatuan})`;
+        }
+
+        const tbody = document.getElementById('numBody');
+
+        function loadNumbers() {
+            for (let i = 1; i <= 100; i++) {
+                let info = getHiraganaRomaji(i);
+                let hiragana = info.split(" (")[0];
+                let romaji = info.split(" (")[1].replace(")", "");
+                let kanji = i === 100 ? "百" : getKanji(i);
+
+                const tr = document.createElement('tr');
+                tr.onclick = () => {
+                    const utter = new SpeechSynthesisUtterance(hiragana);
+                    utter.lang = 'ja-JP';
+                    window.speechSynthesis.speak(utter);
+                };
+                
+                tr.innerHTML = `
+                    <td class="num-font">${i}</td>
+                    <td>
+                        <span class="jp-font">${kanji}</span><br>
+                        <span class="kana-font">${hiragana}</span>
+                    </td>
+                    <td><i>${romaji}</i></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function filterNumbers() {
+            let input = document.getElementById('numSearch').value.toLowerCase();
+            let rows = tbody.getElementsByTagName('tr');
+            for (let row of rows) {
+                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+
+        loadNumbers();
+    </script>
+</body>
+</html>
